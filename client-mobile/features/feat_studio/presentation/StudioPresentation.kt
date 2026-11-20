@@ -45,6 +45,12 @@ data class StudioUiState(
     val selectedJobType: StudioJobType = StudioJobType.VIRAL_SHORT_CLIP,
     val selectedNiche: StudioContentNiche = StudioContentNiche.DESK_SETUP_UGC,
     val activeNicheFilter: StudioContentNiche? = null,
+    val availableNiches: List<String> = listOf(
+        StudioContentNiche.DESK_SETUP_UGC.name,
+        StudioContentNiche.RAP_CULTURE_VIRAL.name,
+        StudioContentNiche.YOUTUBE_HIGHLIGHT_CLIP.name,
+        StudioContentNiche.MENSWEAR_LOOKBOOK.name,
+    ),
     val selectedDayKey: String = "monday",
     val newGarmentTitle: String = "",
     val newGarmentCategory: WardrobeCategory = WardrobeCategory.OUTERWEAR,
@@ -63,6 +69,15 @@ data class StudioUiState(
         get() = activeNicheFilter?.let { niche ->
             jobs.filter { it.contentNiche == niche }
         } ?: jobs
+
+    val filteredScheduledPosts: List<ScheduledStudioPost>
+        get() {
+            val filter = activeNicheFilter ?: return scheduledPosts
+            val matchingJobIds = jobs.filter { it.contentNiche == filter }.map { it.id }.toSet()
+            return scheduledPosts.filter { post ->
+                post.contentNiche == filter || post.jobId in matchingJobIds
+            }
+        }
 
     val filteredNicheMetrics: List<StudioNichePerformanceMetric>
         get() = nicheAnalytics?.niches?.let { metrics ->
@@ -104,6 +119,7 @@ sealed interface StudioUiEvent {
     data class JobTypeSelected(val jobType: StudioJobType) : StudioUiEvent
     data class ContentNicheSelected(val niche: StudioContentNiche) : StudioUiEvent
     data class NicheFilterSelected(val niche: StudioContentNiche?) : StudioUiEvent
+    data class NicheSelected(val niche: String?) : StudioUiEvent
     data class ScheduleSlotClicked(val jobId: String, val slot: StudioPublishingSlot) : StudioUiEvent
     data class OutfitDaySelected(val dayKey: String) : StudioUiEvent
     data class NewGarmentTitleChanged(val title: String) : StudioUiEvent
@@ -133,6 +149,12 @@ class StudioViewModel(
             }
             is StudioUiEvent.NicheFilterSelected -> {
                 _uiState.update { it.copy(activeNicheFilter = event.niche) }
+            }
+            is StudioUiEvent.NicheSelected -> {
+                val parsed = event.niche?.let { name ->
+                    runCatching { StudioContentNiche.valueOf(name) }.getOrNull()
+                }
+                _uiState.update { it.copy(activeNicheFilter = parsed) }
             }
             is StudioUiEvent.ScheduleSlotClicked -> {
                 scheduleSlot(event.jobId, event.slot)

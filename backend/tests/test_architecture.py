@@ -1028,5 +1028,38 @@ async def test_vercel_cron_outbox_relay_endpoint_and_security(
         await test_engine.dispose()
 
 
+def test_mobile_studio_niche_selector_and_scheduled_post_attribution() -> None:
+    """Verifies feat_studio niche selector UDF (availableNiches, NicheSelected, filteredScheduledPosts) and OpenAPI parity."""
+    assert OPENAPI_CONTRACT_PATH.exists(), "shared-contracts/openapi.json no existe."
+    openapi = json.loads(OPENAPI_CONTRACT_PATH.read_text(encoding="utf-8"))
+    paths = openapi.get("paths", {})
+    for required_endpoint in (
+        "/api/v1/media-ai/jobs",
+        "/api/v1/media-ai/schedule",
+        "/api/v1/media-ai/analytics/by-niche",
+    ):
+        assert required_endpoint in paths, (
+            f"Falta endpoint '{required_endpoint}' en shared-contracts/openapi.json."
+        )
+
+    pres_source = (
+        MOBILE_FEATURES_DIR / "feat_studio" / "presentation" / "StudioPresentation.kt"
+    ).read_text(encoding="utf-8-sig")
+    assert "val availableNiches: List<String>" in pres_source
+    assert "data class NicheSelected(val niche: String?) : StudioUiEvent" in pres_source
+    assert "val filteredScheduledPosts: List<ScheduledStudioPost>" in pres_source
+    assert "val filteredNicheMetrics: List<StudioNichePerformanceMetric>" in pres_source
+    assert "private val _uiState = MutableStateFlow(StudioUiState())" in pres_source
+    assert "val uiState: StateFlow<StudioUiState> = _uiState.asStateFlow()" in pres_source
+    assert "COP" in pres_source
+
+    domain_source = (
+        MOBILE_FEATURES_DIR / "feat_studio" / "domain" / "StudioDomain.kt"
+    ).read_text(encoding="utf-8-sig")
+    assert "co.superapp.core.network" not in domain_source
+    for forbidden in FORBIDDEN_KOTLIN_DOMAIN_IMPORTS:
+        assert f"import {forbidden}" not in domain_source
+
+
 
 
