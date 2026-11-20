@@ -786,20 +786,25 @@ def test_vercel_serverless_entrypoint_and_config(monkeypatch: pytest.MonkeyPatch
     from fastapi import FastAPI
     from app.core.config import Settings
 
-    # 1. vercel.json contract
+    # 1. vercel.json contract (Vercel Functions + Rewrites) & root requirements.txt
     vercel_json_path = MONOREPO_ROOT / "vercel.json"
     assert vercel_json_path.is_file(), "Falta vercel.json en la raíz del monorepo."
     vercel_cfg = json.loads(vercel_json_path.read_text(encoding="utf-8"))
-    builds = vercel_cfg.get("builds", [])
-    routes = vercel_cfg.get("routes", [])
+    functions = vercel_cfg.get("functions", {})
+    rewrites = vercel_cfg.get("rewrites", [])
+    assert "api/index.py" in functions, "vercel.json debe configurar functions['api/index.py']."
+    assert "backend/**" in str(functions["api/index.py"].get("includeFiles", "")), (
+        "vercel.json debe incluir backend/** en functions['api/index.py'].includeFiles."
+    )
     assert any(
-        b.get("src") == "api/index.py" and b.get("use") == "@vercel/python"
-        for b in builds
-    ), "vercel.json debe declarar api/index.py con @vercel/python."
-    assert any(
-        r.get("src") == "/(.*)" and r.get("dest") == "/api/index.py"
-        for r in routes
-    ), "vercel.json debe enrutar /(.*) hacia /api/index.py."
+        r.get("source") == "/(.*)" and r.get("destination") in ("/api/index", "/api/index.py")
+        for r in rewrites
+    ), "vercel.json debe reescribir /(.*) hacia /api/index."
+
+    root_reqs_path = MONOREPO_ROOT / "requirements.txt"
+    assert root_reqs_path.is_file(), "Falta requirements.txt ligero en la raíz para Vercel."
+    root_reqs = root_reqs_path.read_text(encoding="utf-8")
+    assert "fastapi" in root_reqs and "sqlalchemy[asyncio]" in root_reqs
 
     # 2. ASGI entrypoint api/index.py exposes FastAPI app with key routes
     entrypoint_path = MONOREPO_ROOT / "api" / "index.py"
