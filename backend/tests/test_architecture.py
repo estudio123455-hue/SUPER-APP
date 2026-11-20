@@ -934,9 +934,10 @@ async def test_vercel_cron_outbox_relay_endpoint_and_security(
         cfg = json.loads(vj_path.read_text(encoding="utf-8"))
         crons = cfg.get("crons", [])
         assert any(
-            c.get("path") == "/api/v1/internal/outbox/relay" and c.get("schedule")
+            c.get("path") == "/api/v1/internal/outbox/relay"
+            and c.get("schedule") == "0 3 * * *"
             for c in crons
-        ), f"{vj_path} debe declarar el cron /api/v1/internal/outbox/relay."
+        ), f"{vj_path} debe declarar el cron /api/v1/internal/outbox/relay con schedule diario '0 3 * * *'."
 
     # 2. Verify internal endpoint is excluded from public OpenAPI schema
     assert "/api/v1/internal/outbox/relay" not in app.openapi().get("paths", {})
