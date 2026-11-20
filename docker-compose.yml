@@ -1,0 +1,90 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: superapp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-super_app_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init-schemas.sql:/docker-entrypoint-initdb.d/01-init-schemas.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-super_app_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - superapp_internal_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: superapp-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - superapp_internal_net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: superapp-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      APP_NAME: "Super App Ecosystem API"
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      DEBUG: ${DEBUG:-false}
+      USE_POSTGRES: "true"
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-super_app_db}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-super_app_db}
+      DATABASE_URL_OVERRIDE: postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-super_app_db}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-["*"]}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-CHANGE_ME_IN_PRODUCTION_SUPER_SECRET_KEY}
+      PAYMENT_WEBHOOK_SECRET: ${WEBHOOK_HMAC_SECRET:-${PAYMENT_WEBHOOK_SECRET:-CHANGE_ME_IN_PRODUCTION_WEBHOOK_HMAC_SECRET}}
+      OUTBOX_RETRY_WORKER_ENABLED: ${OUTBOX_RETRY_WORKER_ENABLED:-true}
+      OUTBOX_RETRY_INTERVAL_SECONDS: ${OUTBOX_RETRY_INTERVAL_SECONDS:-15.0}
+      MEDIA_OUTPUTS_DIR: ${MEDIA_OUTPUTS_DIR:-/app/media_outputs}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/healthz && curl -f http://localhost:8000/readyz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - media_outputs:/app/media_outputs
+    networks:
+      - superapp_internal_net
+
+volumes:
+  postgres_data:
+  redis_data:
+  media_outputs:
+
+networks:
+  superapp_internal_net:
+    driver: bridge

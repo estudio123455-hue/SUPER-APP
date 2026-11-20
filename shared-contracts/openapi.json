@@ -1,0 +1,3822 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Super App Ecosystem API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/dashboard": {
+      "get": {
+        "tags": [
+          "Control Center UI"
+        ],
+        "summary": "Control Center Dashboard",
+        "description": "Serves the interactive Super App Control Center web UI.",
+        "operationId": "control_center_dashboard_dashboard_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/register": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Register User",
+        "description": "Registers a new user account and emits UserRegisteredEvent.",
+        "operationId": "register_user_api_v1_identity_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/auth/login": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Login User",
+        "description": "Authenticates a user and returns JWT access and rotatable refresh tokens.",
+        "operationId": "login_user_api_v1_identity_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPairResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/login": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Login User",
+        "description": "Authenticates a user and returns JWT access and rotatable refresh tokens.",
+        "operationId": "login_user_api_v1_identity_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPairResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/auth/refresh": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Refresh Tokens",
+        "description": "Rotates an existing refresh token, invalidates old token, and issues a new pair.",
+        "operationId": "refresh_tokens_api_v1_identity_auth_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPairResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/refresh": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Refresh Tokens",
+        "description": "Rotates an existing refresh token, invalidates old token, and issues a new pair.",
+        "operationId": "refresh_tokens_api_v1_identity_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPairResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/auth/logout": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Logout User",
+        "description": "Revokes a refresh token upon user logout.",
+        "operationId": "logout_user_api_v1_identity_auth_logout_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/logout": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Logout User",
+        "description": "Revokes a refresh token upon user logout.",
+        "operationId": "logout_user_api_v1_identity_logout_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/me": {
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Get Me",
+        "description": "Returns the currently authenticated user's profile.",
+        "operationId": "get_me_api_v1_identity_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/me": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Get My Wallet",
+        "description": "Returns the authenticated user's wallet balance and recent ledger movements.",
+        "operationId": "get_my_wallet_api_v1_wallet_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletMeResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/me/deposit": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Deposit Funds",
+        "description": "Credits funds into the authenticated user's wallet with idempotency protection.",
+        "operationId": "deposit_funds_api_v1_wallet_me_deposit_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResultResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/me/withdraw": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Withdraw Funds",
+        "description": "Debits funds from the authenticated user's wallet, validating available balance.",
+        "operationId": "withdraw_funds_api_v1_wallet_me_withdraw_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResultResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/me/redeem-points": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Redeem Loyalty Points",
+        "description": "Converts the authenticated user's accumulated cashback points directly into liquid balance.",
+        "operationId": "redeem_loyalty_points_api_v1_wallet_me_redeem_points_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResultResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/webhooks/payment-gateway": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Receive Payment Gateway Webhook",
+        "description": "Validates HMAC-SHA256 signature and idempotently credits user wallet from PSE/Nequi/Wompi.",
+        "operationId": "receive_payment_gateway_webhook_api_v1_wallet_webhooks_payment_gateway_post",
+        "parameters": [
+          {
+            "name": "X-Webhook-Signature",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Webhook-Signature"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentGatewayWebhookRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentGatewayWebhookResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/commerce/products": {
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Create Product",
+        "description": "Creates a new product in the catalog associated with the authenticated merchant.",
+        "operationId": "create_product_api_v1_commerce_products_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "List Products",
+        "description": "Lists all active catalog products with available inventory, with optional search and category filters.",
+        "operationId": "list_products_api_v1_commerce_products_get",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          },
+          {
+            "name": "category_tag",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category Tag"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductResponse"
+                  },
+                  "title": "Response List Products Api V1 Commerce Products Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/commerce/products/{product_id}/stock": {
+      "patch": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Restock Product",
+        "description": "Adds positive stock units to an existing catalog product.",
+        "operationId": "restock_product_api_v1_commerce_products__product_id__stock_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestockProductRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/commerce/products/{product_id}/dynamic-price": {
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Apply Dynamic Price",
+        "description": "Applies dynamic pricing based on stock scarcity and demand while protecting COGS margin.",
+        "operationId": "apply_dynamic_price_api_v1_commerce_products__product_id__dynamic_price_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DynamicPricingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DynamicPricingResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/commerce/products/{product_id}/cross-sell": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Get Cross Sell Bundle",
+        "description": "Calculates and returns a smart AI cross-sell bundle recommendation protecting COGS floor.",
+        "operationId": "get_cross_sell_bundle_api_v1_commerce_products__product_id__cross_sell_get",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/CrossSellBundleResponse"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Get Cross Sell Bundle Api V1 Commerce Products  Product Id  Cross Sell Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/commerce/coupons": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "List Promo Coupons",
+        "description": "Lists active promotional coupons available in the store.",
+        "operationId": "list_promo_coupons_api_v1_commerce_coupons_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PromoCouponResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Promo Coupons Api V1 Commerce Coupons Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Create Promo Coupon",
+        "description": "Creates or updates a promotional coupon (e.g. SUPER10) protected by the 1.15x COGS floor.",
+        "operationId": "create_promo_coupon_api_v1_commerce_coupons_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromoCouponRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoCouponResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/commerce/orders": {
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Place Order",
+        "description": "Places a new order using WALLET or CASH_ON_DELIVERY with optional video attribution and promo coupon.",
+        "operationId": "place_order_api_v1_commerce_orders_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaceOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/commerce/orders/{order_id}/ship": {
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Ship Order",
+        "description": "Marks a CONFIRMED order as SHIPPED with carrier & tracking guide and emits OrderShippedEvent.",
+        "operationId": "ship_order_api_v1_commerce_orders__order_id__ship_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShipOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/commerce/orders/{order_id}/messages": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Get Order Lifecycle Messages",
+        "description": "Returns the 3 automated post-sale customer messages (Confirmation, Shipping, Post-Delivery) and wa.me links.",
+        "operationId": "get_order_lifecycle_messages_api_v1_commerce_orders__order_id__messages_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderLifecycleMessagesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/commerce/orders/{order_id}/deliver": {
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Deliver Order",
+        "description": "Marks an order as DELIVERED and emits OrderDeliveredAndSettledEvent for Wallet settlement.",
+        "operationId": "deliver_order_api_v1_commerce_orders__order_id__deliver_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/commerce/orders/me": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "List My Orders",
+        "description": "Returns the authenticated buyer's purchase order history.",
+        "operationId": "list_my_orders_api_v1_commerce_orders_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OrderResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List My Orders Api V1 Commerce Orders Me Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/commerce/analytics/summary": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Get Commerce Analytics Summary",
+        "description": "Returns real-time inventory valuation, COGS, shipping costs, and realized net profit.",
+        "operationId": "get_commerce_analytics_summary_api_v1_commerce_analytics_summary_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommerceFinancialSummaryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/commerce/analytics/weekly-report": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Download Weekly Executive Report",
+        "description": "Generates and downloads the weekly executive Markdown report with unit economics & pricing.",
+        "operationId": "download_weekly_executive_report_api_v1_commerce_analytics_weekly_report_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/media-ai/jobs": {
+      "get": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "List My Jobs",
+        "description": "Lists all MediaJobs created by the authenticated user.",
+        "operationId": "list_my_jobs_api_v1_media_ai_jobs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MediaJobResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List My Jobs Api V1 Media Ai Jobs Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Enqueue Media Job",
+        "description": "Enqueues a heavy video/AI job off the main HTTP thread and returns 202 Accepted (Law 5).",
+        "operationId": "enqueue_media_job_api_v1_media_ai_jobs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnqueueMediaJobRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/media-ai/jobs/{job_id}": {
+      "get": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Get Media Job",
+        "description": "Retrieves the status, progress_percent, and result_payload of a MediaJob.",
+        "operationId": "get_media_job_api_v1_media_ai_jobs__job_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media-ai/jobs/{job_id}/process-sync": {
+      "post": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Process Media Job Sync",
+        "description": "Deterministically executes the worker pipeline and writes physical artifacts on disk.",
+        "operationId": "process_media_job_sync_api_v1_media_ai_jobs__job_id__process_sync_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media-ai/jobs/{job_id}/download-srt": {
+      "get": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Download Job Srt",
+        "description": "Downloads the generated CapCut-ready .srt subtitle file for a completed MediaJob.",
+        "operationId": "download_job_srt_api_v1_media_ai_jobs__job_id__download_srt_get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media-ai/jobs/{job_id}/download-pack": {
+      "get": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Download Job Production Pack",
+        "description": "Downloads the generated Markdown production guide (script_tiktok.md) for a completed job.",
+        "operationId": "download_job_production_pack_api_v1_media_ai_jobs__job_id__download_pack_get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media-ai/jobs/{job_id}/download-mp4": {
+      "get": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Download Job Vertical Mp4",
+        "description": "Downloads the generated vertical 9:16 short_9x16.mp4 clip for a completed MediaJob.",
+        "operationId": "download_job_vertical_mp4_api_v1_media_ai_jobs__job_id__download_mp4_get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media-ai/jobs/{job_id}/schedule": {
+      "post": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Schedule Media Post",
+        "description": "Schedules a MediaJob into SLOT_1_MIDDAY or SLOT_2_EVENING and generates calendar_invite.ics.",
+        "operationId": "schedule_media_post_api_v1_media_ai_jobs__job_id__schedule_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleMediaPostRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduledPostResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media-ai/schedule": {
+      "get": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Get Publishing Schedule",
+        "description": "Returns the creator's scheduled posts and 2-videos/day goal progress.",
+        "operationId": "get_publishing_schedule_api_v1_media_ai_schedule_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "target_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyStreakProgressResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media-ai/jobs/{job_id}/download-ics": {
+      "get": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Download Job Calendar Ics",
+        "description": "Downloads the Google Calendar .ics invite with 15-minute VALARM reminder.",
+        "operationId": "download_job_calendar_ics_api_v1_media_ai_jobs__job_id__download_ics_get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media-ai/analytics/by-niche": {
+      "get": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Get Niche Performance Analytics",
+        "description": "Returns ROI and conversion performance grouped by ContentNiche.",
+        "operationId": "get_niche_performance_analytics_api_v1_media_ai_analytics_by_niche_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NichePerformanceAnalyticsResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/media-ai/maintenance/cleanup": {
+      "post": {
+        "tags": [
+          "Media AI"
+        ],
+        "summary": "Cleanup Expired Media Artifacts",
+        "description": "Purges heavy physical media artifacts older than retention_days while preserving ROI metrics.",
+        "operationId": "cleanup_expired_media_artifacts_api_v1_media_ai_maintenance_cleanup_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "retention_days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 3650,
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Retention Days"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/MediaArtifactCleanupRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Payload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaArtifactCleanupResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Healthz",
+        "description": "Liveness probe: verifies that the process is up and running.",
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Healthz Healthz Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/readyz": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Readyz",
+        "description": "Readiness probe: validates database connectivity with a live SELECT 1 query.",
+        "operationId": "readyz_readyz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Readyz Readyz Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CommerceFinancialSummaryResponse": {
+        "properties": {
+          "inventory_cost_value_cents": {
+            "type": "integer",
+            "title": "Inventory Cost Value Cents"
+          },
+          "inventory_retail_value_cents": {
+            "type": "integer",
+            "title": "Inventory Retail Value Cents"
+          },
+          "potential_inventory_profit_cents": {
+            "type": "integer",
+            "title": "Potential Inventory Profit Cents"
+          },
+          "orders_count": {
+            "type": "integer",
+            "title": "Orders Count"
+          },
+          "delivered_orders_count": {
+            "type": "integer",
+            "title": "Delivered Orders Count"
+          },
+          "gross_revenue_cents": {
+            "type": "integer",
+            "title": "Gross Revenue Cents"
+          },
+          "accumulated_cogs_cents": {
+            "type": "integer",
+            "title": "Accumulated Cogs Cents"
+          },
+          "accumulated_shipping_cents": {
+            "type": "integer",
+            "title": "Accumulated Shipping Cents"
+          },
+          "realized_net_profit_cents": {
+            "type": "integer",
+            "title": "Realized Net Profit Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "inventory_cost_value_cents",
+          "inventory_retail_value_cents",
+          "potential_inventory_profit_cents",
+          "orders_count",
+          "delivered_orders_count",
+          "gross_revenue_cents",
+          "accumulated_cogs_cents",
+          "accumulated_shipping_cents",
+          "realized_net_profit_cents"
+        ],
+        "title": "CommerceFinancialSummaryResponse",
+        "description": "Real-time unit economics summary for the merchant dashboard."
+      },
+      "ContentNiche": {
+        "type": "string",
+        "enum": [
+          "DESK_SETUP_UGC",
+          "RAP_CULTURE_VIRAL",
+          "YOUTUBE_HIGHLIGHT_CLIP",
+          "MENSWEAR_LOOKBOOK"
+        ],
+        "title": "ContentNiche",
+        "description": "Multi-niche production templates for script and retention generation."
+      },
+      "CreateProductRequest": {
+        "properties": {
+          "sku": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 2,
+            "title": "Sku",
+            "examples": [
+              "ERGO-STAND-PRO"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 2,
+            "title": "Title",
+            "examples": [
+              "Soporte Ergonómico Pro Aluminio"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Description",
+            "default": ""
+          },
+          "price_cents": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Price Cents",
+            "description": "Selling unit price in integer COP cents.",
+            "examples": [
+              9500000
+            ]
+          },
+          "unit_cost_cents": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Unit Cost Cents",
+            "description": "Unit acquisition/manufacturing cost (COGS) in integer COP cents.",
+            "default": 0,
+            "examples": [
+              4200000
+            ]
+          },
+          "stock_quantity": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Stock Quantity",
+            "examples": [
+              15
+            ]
+          },
+          "category_tag": {
+            "type": "string",
+            "maxLength": 64,
+            "title": "Category Tag",
+            "default": "GENERAL",
+            "examples": [
+              "MENSWEAR"
+            ]
+          },
+          "complement_tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Complement Tags",
+            "examples": [
+              [
+                "MENSWEAR",
+                "ACCESSORIES"
+              ]
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "sku",
+          "title",
+          "price_cents",
+          "stock_quantity"
+        ],
+        "title": "CreateProductRequest",
+        "description": "Payload for creating a new catalog product with COGS unit economics."
+      },
+      "CreatePromoCouponRequest": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 2,
+            "title": "Code",
+            "examples": [
+              "SUPER10"
+            ]
+          },
+          "discount_percentage": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Discount Percentage",
+            "description": "Discount percentage between 1% and 50% (protected by 1.15x COGS floor).",
+            "examples": [
+              10
+            ]
+          },
+          "max_uses": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Uses",
+            "description": "Optional maximum redemption cap."
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "discount_percentage"
+        ],
+        "title": "CreatePromoCouponRequest",
+        "description": "Payload for creating or updating a promotional coupon in commerce_schema."
+      },
+      "CrossSellBundleResponse": {
+        "properties": {
+          "anchor_product_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Anchor Product Id"
+          },
+          "anchor_sku": {
+            "type": "string",
+            "title": "Anchor Sku"
+          },
+          "anchor_title": {
+            "type": "string",
+            "title": "Anchor Title"
+          },
+          "anchor_price_cents": {
+            "type": "integer",
+            "title": "Anchor Price Cents"
+          },
+          "complement_product_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Complement Product Id"
+          },
+          "complement_sku": {
+            "type": "string",
+            "title": "Complement Sku"
+          },
+          "complement_title": {
+            "type": "string",
+            "title": "Complement Title"
+          },
+          "complement_price_cents": {
+            "type": "integer",
+            "title": "Complement Price Cents"
+          },
+          "bundle_name": {
+            "type": "string",
+            "title": "Bundle Name"
+          },
+          "original_total_cents": {
+            "type": "integer",
+            "title": "Original Total Cents"
+          },
+          "bundle_price_cents": {
+            "type": "integer",
+            "title": "Bundle Price Cents"
+          },
+          "savings_cents": {
+            "type": "integer",
+            "title": "Savings Cents"
+          },
+          "discount_percentage": {
+            "type": "number",
+            "title": "Discount Percentage"
+          },
+          "combined_cogs_cents": {
+            "type": "integer",
+            "title": "Combined Cogs Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "anchor_product_id",
+          "anchor_sku",
+          "anchor_title",
+          "anchor_price_cents",
+          "complement_product_id",
+          "complement_sku",
+          "complement_title",
+          "complement_price_cents",
+          "bundle_name",
+          "original_total_cents",
+          "bundle_price_cents",
+          "savings_cents",
+          "discount_percentage",
+          "combined_cogs_cents"
+        ],
+        "title": "CrossSellBundleResponse",
+        "description": "Public representation of an AI smart cross-sell bundle recommendation."
+      },
+      "DailyStreakProgressResponse": {
+        "properties": {
+          "target_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Target Date"
+          },
+          "scheduled_today_count": {
+            "type": "integer",
+            "title": "Scheduled Today Count"
+          },
+          "daily_goal": {
+            "type": "integer",
+            "title": "Daily Goal"
+          },
+          "goal_completed": {
+            "type": "boolean",
+            "title": "Goal Completed"
+          },
+          "total_conversions": {
+            "type": "integer",
+            "title": "Total Conversions"
+          },
+          "total_revenue_attributed_cents": {
+            "type": "integer",
+            "title": "Total Revenue Attributed Cents"
+          },
+          "scheduled_posts": {
+            "items": {
+              "$ref": "#/components/schemas/ScheduledPostResponse"
+            },
+            "type": "array",
+            "title": "Scheduled Posts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_date",
+          "scheduled_today_count",
+          "daily_goal",
+          "goal_completed",
+          "total_conversions",
+          "total_revenue_attributed_cents",
+          "scheduled_posts"
+        ],
+        "title": "DailyStreakProgressResponse",
+        "description": "Public response summarizing the 2-videos/day goal and scheduled publications."
+      },
+      "DynamicPricingRequest": {
+        "properties": {
+          "demand_conversions": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Demand Conversions",
+            "description": "Attributed sales conversions driving demand surge.",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "DynamicPricingRequest",
+        "description": "Payload for triggering dynamic price adjustment on a product."
+      },
+      "DynamicPricingResponse": {
+        "properties": {
+          "product": {
+            "$ref": "#/components/schemas/ProductResponse"
+          },
+          "old_price_cents": {
+            "type": "integer",
+            "title": "Old Price Cents"
+          },
+          "new_price_cents": {
+            "type": "integer",
+            "title": "New Price Cents"
+          },
+          "pricing_strategy": {
+            "type": "string",
+            "title": "Pricing Strategy"
+          }
+        },
+        "type": "object",
+        "required": [
+          "product",
+          "old_price_cents",
+          "new_price_cents",
+          "pricing_strategy"
+        ],
+        "title": "DynamicPricingResponse",
+        "description": "Response returned after applying dynamic pricing to a product."
+      },
+      "EnqueueMediaJobRequest": {
+        "properties": {
+          "job_type": {
+            "$ref": "#/components/schemas/JobType"
+          },
+          "content_niche": {
+            "$ref": "#/components/schemas/ContentNiche",
+            "description": "Multi-niche script and retention template.",
+            "default": "DESK_SETUP_UGC"
+          },
+          "source_url_or_prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Source Url Or Prompt",
+            "examples": [
+              "https://storage.superapp.io/raw/unboxing_ergo.mp4"
+            ]
+          },
+          "linked_product_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linked Product Id",
+            "description": "Optional Commerce catalog product UUID to embed in the AI/Video job."
+          },
+          "use_real_pipeline": {
+            "type": "boolean",
+            "title": "Use Real Pipeline",
+            "description": "When True, runs real yt-dlp (720p) + faster-whisper (int8 CPU) + FFmpeg (9:16).",
+            "default": false
+          },
+          "burn_subtitles": {
+            "type": "boolean",
+            "title": "Burn Subtitles",
+            "description": "When True, burns TikTok-styled bold subtitles into the vertical 9:16 MP4.",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_type",
+          "source_url_or_prompt"
+        ],
+        "title": "EnqueueMediaJobRequest",
+        "description": "Payload for enqueuing an asynchronous video or AI processing job."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment"
+          },
+          "isolated_schemas": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Isolated Schemas"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "service",
+          "version",
+          "environment",
+          "isolated_schemas"
+        ],
+        "title": "HealthResponse",
+        "description": "Pydantic v2 response schema for system health check."
+      },
+      "JobStatus": {
+        "type": "string",
+        "enum": [
+          "QUEUED",
+          "PROCESSING",
+          "COMPLETED",
+          "FAILED"
+        ],
+        "title": "JobStatus",
+        "description": "Asynchronous lifecycle states of a MediaJob."
+      },
+      "JobType": {
+        "type": "string",
+        "enum": [
+          "VIRAL_SHORT_CLIP",
+          "AUTO_CAPTIONS_WHISPER",
+          "AI_OUTFIT_RECOMMENDATION",
+          "PRODUCT_SHOWCASE_VIDEO"
+        ],
+        "title": "JobType",
+        "description": "Supported AI & video processing job types in the Studio."
+      },
+      "LedgerEntryResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "wallet_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Wallet Id"
+          },
+          "amount_cents": {
+            "type": "integer",
+            "title": "Amount Cents"
+          },
+          "transaction_type": {
+            "$ref": "#/components/schemas/TransactionType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TransactionStatus"
+          },
+          "reference": {
+            "type": "string",
+            "title": "Reference"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "title": "Idempotency Key"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "wallet_id",
+          "amount_cents",
+          "transaction_type",
+          "status",
+          "reference",
+          "idempotency_key",
+          "created_at"
+        ],
+        "title": "LedgerEntryResponse",
+        "description": "Public representation of a single accounting ledger movement."
+      },
+      "LoginRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 5,
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginRequest",
+        "description": "Payload for authenticating a user with email and password."
+      },
+      "LogoutRequest": {
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "minLength": 10,
+            "title": "Refresh Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "refresh_token"
+        ],
+        "title": "LogoutRequest",
+        "description": "Payload for revoking a refresh token upon user logout."
+      },
+      "LogoutResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "logged_out"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": "Successfully logged out"
+          }
+        },
+        "type": "object",
+        "title": "LogoutResponse",
+        "description": "Confirmation message returned upon successful logout."
+      },
+      "MediaArtifactCleanupRequest": {
+        "properties": {
+          "retention_days": {
+            "type": "integer",
+            "maximum": 3650.0,
+            "minimum": 0.0,
+            "title": "Retention Days",
+            "description": "Purge artifacts for completed/failed jobs older than this many days.",
+            "default": 30
+          }
+        },
+        "type": "object",
+        "title": "MediaArtifactCleanupRequest",
+        "description": "Optional JSON body for purging expired heavy media artifacts."
+      },
+      "MediaArtifactCleanupResponse": {
+        "properties": {
+          "retention_days": {
+            "type": "integer",
+            "title": "Retention Days"
+          },
+          "jobs_scanned": {
+            "type": "integer",
+            "title": "Jobs Scanned"
+          },
+          "files_deleted": {
+            "type": "integer",
+            "title": "Files Deleted"
+          },
+          "bytes_reclaimed": {
+            "type": "integer",
+            "title": "Bytes Reclaimed"
+          },
+          "retained_metrics_count": {
+            "type": "integer",
+            "title": "Retained Metrics Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "retention_days",
+          "jobs_scanned",
+          "files_deleted",
+          "bytes_reclaimed",
+          "retained_metrics_count"
+        ],
+        "title": "MediaArtifactCleanupResponse",
+        "description": "Summary of purged expired media artifacts while preserving ROI attribution metrics."
+      },
+      "MediaJobResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Creator Id"
+          },
+          "job_type": {
+            "$ref": "#/components/schemas/JobType"
+          },
+          "content_niche": {
+            "$ref": "#/components/schemas/ContentNiche"
+          },
+          "source_url_or_prompt": {
+            "type": "string",
+            "title": "Source Url Or Prompt"
+          },
+          "linked_product_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linked Product Id"
+          },
+          "use_real_pipeline": {
+            "type": "boolean",
+            "title": "Use Real Pipeline",
+            "default": false
+          },
+          "burn_subtitles": {
+            "type": "boolean",
+            "title": "Burn Subtitles",
+            "default": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "progress_percent": {
+            "type": "integer",
+            "title": "Progress Percent"
+          },
+          "result_payload": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Payload"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "artifacts_purged": {
+            "type": "boolean",
+            "title": "Artifacts Purged",
+            "default": false
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "creator_id",
+          "job_type",
+          "content_niche",
+          "source_url_or_prompt",
+          "linked_product_id",
+          "status",
+          "progress_percent",
+          "result_payload",
+          "error_message",
+          "created_at"
+        ],
+        "title": "MediaJobResponse",
+        "description": "Public representation of a MediaJob and its asynchronous progress/output."
+      },
+      "NichePerformanceAnalyticsResponse": {
+        "properties": {
+          "top_performing_niche": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ContentNiche"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total_videos_created": {
+            "type": "integer",
+            "title": "Total Videos Created"
+          },
+          "total_videos_scheduled": {
+            "type": "integer",
+            "title": "Total Videos Scheduled"
+          },
+          "total_conversions": {
+            "type": "integer",
+            "title": "Total Conversions"
+          },
+          "total_revenue_attributed_cents": {
+            "type": "integer",
+            "title": "Total Revenue Attributed Cents"
+          },
+          "niches": {
+            "items": {
+              "$ref": "#/components/schemas/NichePerformanceMetricResponse"
+            },
+            "type": "array",
+            "title": "Niches"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_videos_created",
+          "total_videos_scheduled",
+          "total_conversions",
+          "total_revenue_attributed_cents",
+          "niches"
+        ],
+        "title": "NichePerformanceAnalyticsResponse",
+        "description": "Aggregated content ROI analytics across all ContentNiche verticals."
+      },
+      "NichePerformanceMetricResponse": {
+        "properties": {
+          "content_niche": {
+            "$ref": "#/components/schemas/ContentNiche"
+          },
+          "total_videos_created": {
+            "type": "integer",
+            "title": "Total Videos Created"
+          },
+          "total_videos_scheduled": {
+            "type": "integer",
+            "title": "Total Videos Scheduled"
+          },
+          "conversions_count": {
+            "type": "integer",
+            "title": "Conversions Count"
+          },
+          "revenue_attributed_cents": {
+            "type": "integer",
+            "title": "Revenue Attributed Cents"
+          },
+          "conversions_per_video": {
+            "type": "number",
+            "title": "Conversions Per Video"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content_niche",
+          "total_videos_created",
+          "total_videos_scheduled",
+          "conversions_count",
+          "revenue_attributed_cents",
+          "conversions_per_video"
+        ],
+        "title": "NichePerformanceMetricResponse",
+        "description": "Performance and ROI metrics for a specific ContentNiche vertical."
+      },
+      "OrderItemRequest": {
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Product Id"
+          },
+          "quantity": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Quantity",
+            "examples": [
+              1
+            ]
+          },
+          "variant_sku": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Sku",
+            "description": "Optional SKU of the chosen variant (e.g. RBR-JKT-M-BLK)",
+            "examples": [
+              "RBR-JKT-M-BLK"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "product_id",
+          "quantity"
+        ],
+        "title": "OrderItemRequest",
+        "description": "Requested line item inside a PlaceOrderRequest."
+      },
+      "OrderItemResponse": {
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Product Id"
+          },
+          "sku": {
+            "type": "string",
+            "title": "Sku"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "unit_price_cents": {
+            "type": "integer",
+            "title": "Unit Price Cents"
+          },
+          "unit_cost_cents": {
+            "type": "integer",
+            "title": "Unit Cost Cents"
+          },
+          "quantity": {
+            "type": "integer",
+            "title": "Quantity"
+          },
+          "subtotal_cents": {
+            "type": "integer",
+            "title": "Subtotal Cents"
+          },
+          "subtotal_cost_cents": {
+            "type": "integer",
+            "title": "Subtotal Cost Cents"
+          },
+          "variant_sku": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Sku"
+          }
+        },
+        "type": "object",
+        "required": [
+          "product_id",
+          "sku",
+          "title",
+          "unit_price_cents",
+          "unit_cost_cents",
+          "quantity",
+          "subtotal_cents",
+          "subtotal_cost_cents"
+        ],
+        "title": "OrderItemResponse",
+        "description": "Public representation of an Order line item."
+      },
+      "OrderLifecycleMessagesResponse": {
+        "properties": {
+          "order_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Order Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OrderStatus"
+          },
+          "carrier_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Carrier Name"
+          },
+          "tracking_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tracking Code"
+          },
+          "confirmation_msg": {
+            "type": "string",
+            "title": "Confirmation Msg"
+          },
+          "shipping_msg": {
+            "type": "string",
+            "title": "Shipping Msg"
+          },
+          "post_delivery_msg": {
+            "type": "string",
+            "title": "Post Delivery Msg"
+          },
+          "confirmation_whatsapp_url": {
+            "type": "string",
+            "title": "Confirmation Whatsapp Url"
+          },
+          "shipping_whatsapp_url": {
+            "type": "string",
+            "title": "Shipping Whatsapp Url"
+          },
+          "post_delivery_whatsapp_url": {
+            "type": "string",
+            "title": "Post Delivery Whatsapp Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "order_id",
+          "status",
+          "confirmation_msg",
+          "shipping_msg",
+          "post_delivery_msg",
+          "confirmation_whatsapp_url",
+          "shipping_whatsapp_url",
+          "post_delivery_whatsapp_url"
+        ],
+        "title": "OrderLifecycleMessagesResponse",
+        "description": "Automated post-sale messages (Confirmation, Shipping, Post-Delivery) and direct wa.me links."
+      },
+      "OrderResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "buyer_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Buyer Id"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OrderItemResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total_cents": {
+            "type": "integer",
+            "title": "Total Cents"
+          },
+          "shipping_cost_cents": {
+            "type": "integer",
+            "title": "Shipping Cost Cents"
+          },
+          "total_cogs_cents": {
+            "type": "integer",
+            "title": "Total Cogs Cents"
+          },
+          "net_profit_cents": {
+            "type": "integer",
+            "title": "Net Profit Cents"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "payment_method": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OrderStatus"
+          },
+          "shipping_address": {
+            "type": "string",
+            "title": "Shipping Address"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "title": "Idempotency Key"
+          },
+          "source_job_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Job Id"
+          },
+          "carrier_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Carrier Name"
+          },
+          "tracking_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tracking Code"
+          },
+          "coupon_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coupon Code"
+          },
+          "discount_cents": {
+            "type": "integer",
+            "title": "Discount Cents",
+            "default": 0
+          },
+          "whatsapp_checkout_url": {
+            "type": "string",
+            "title": "Whatsapp Checkout Url"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "buyer_id",
+          "items",
+          "total_cents",
+          "shipping_cost_cents",
+          "total_cogs_cents",
+          "net_profit_cents",
+          "currency",
+          "payment_method",
+          "status",
+          "shipping_address",
+          "idempotency_key",
+          "whatsapp_checkout_url",
+          "created_at"
+        ],
+        "title": "OrderResponse",
+        "description": "Public representation of a customer Order including unit economics & WhatsApp link."
+      },
+      "OrderStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING_PAYMENT",
+          "CONFIRMED",
+          "SHIPPED",
+          "DELIVERED",
+          "CANCELLED"
+        ],
+        "title": "OrderStatus",
+        "description": "Lifecycle states of a commerce order."
+      },
+      "PaymentGatewayWebhookRequest": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 4,
+            "title": "Event Id",
+            "description": "Unique gateway notification ID used as idempotency_key.",
+            "examples": [
+              "wompi-evt-2026-998811"
+            ]
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id",
+            "description": "Target user UUID whose wallet will be credited."
+          },
+          "amount_cents": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Amount Cents",
+            "description": "Approved payment amount in integer COP cents.",
+            "examples": [
+              15000000
+            ]
+          },
+          "provider": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 2,
+            "title": "Provider",
+            "examples": [
+              "NEQUI",
+              "PSE",
+              "WOMPI"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "user_id",
+          "amount_cents",
+          "provider"
+        ],
+        "title": "PaymentGatewayWebhookRequest",
+        "description": "External payment gateway webhook payload (PSE / Nequi / Wompi) verified via HMAC-SHA256."
+      },
+      "PaymentGatewayWebhookResponse": {
+        "properties": {
+          "wallet": {
+            "$ref": "#/components/schemas/WalletSummaryResponse"
+          },
+          "entry": {
+            "$ref": "#/components/schemas/LedgerEntryResponse"
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          },
+          "already_processed": {
+            "type": "boolean",
+            "title": "Already Processed",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "wallet",
+          "entry",
+          "provider"
+        ],
+        "title": "PaymentGatewayWebhookResponse",
+        "description": "Response returned after processing an idempotent payment gateway webhook."
+      },
+      "PaymentMethod": {
+        "type": "string",
+        "enum": [
+          "WALLET",
+          "CASH_ON_DELIVERY"
+        ],
+        "title": "PaymentMethod",
+        "description": "Supported checkout payment methods."
+      },
+      "PlaceOrderRequest": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OrderItemRequest"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Items"
+          },
+          "payment_method": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "shipping_address": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 5,
+            "title": "Shipping Address",
+            "examples": [
+              "Calle 93 #11-27, Bogotá, Colombia"
+            ]
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 4,
+            "title": "Idempotency Key",
+            "examples": [
+              "order-checkout-2026-0001"
+            ]
+          },
+          "shipping_cost_cents": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Shipping Cost Cents",
+            "description": "Shipping carrier fee in integer COP cents.",
+            "default": 0,
+            "examples": [
+              1200000
+            ]
+          },
+          "source_job_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Job Id",
+            "description": "Optional Media AI Job UUID that originated this purchase."
+          },
+          "coupon_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coupon Code",
+            "description": "Optional promotional coupon code (e.g. SUPER10) with COGS floor protection.",
+            "examples": [
+              "SUPER10"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "payment_method",
+          "shipping_address",
+          "idempotency_key"
+        ],
+        "title": "PlaceOrderRequest",
+        "description": "Payload for placing an order via WALLET or CASH_ON_DELIVERY."
+      },
+      "ProductResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "merchant_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Merchant Id"
+          },
+          "sku": {
+            "type": "string",
+            "title": "Sku"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "price_cents": {
+            "type": "integer",
+            "title": "Price Cents"
+          },
+          "unit_cost_cents": {
+            "type": "integer",
+            "title": "Unit Cost Cents"
+          },
+          "unit_margin_cents": {
+            "type": "integer",
+            "title": "Unit Margin Cents"
+          },
+          "margin_percentage": {
+            "type": "number",
+            "title": "Margin Percentage"
+          },
+          "stock_quantity": {
+            "type": "integer",
+            "title": "Stock Quantity"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantResponse"
+            },
+            "type": "array",
+            "title": "Variants"
+          },
+          "category_tag": {
+            "type": "string",
+            "title": "Category Tag",
+            "default": "GENERAL"
+          },
+          "complement_tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Complement Tags"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "merchant_id",
+          "sku",
+          "title",
+          "description",
+          "price_cents",
+          "unit_cost_cents",
+          "unit_margin_cents",
+          "margin_percentage",
+          "stock_quantity",
+          "is_active",
+          "created_at"
+        ],
+        "title": "ProductResponse",
+        "description": "Public representation of a catalog Product including margin analytics and variants."
+      },
+      "ProductVariantResponse": {
+        "properties": {
+          "variant_sku": {
+            "type": "string",
+            "title": "Variant Sku"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size"
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Color"
+          },
+          "stock_quantity": {
+            "type": "integer",
+            "title": "Stock Quantity",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "variant_sku"
+        ],
+        "title": "ProductVariantResponse",
+        "description": "Public representation of a product SKU variant."
+      },
+      "PromoCouponResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "discount_percentage": {
+            "type": "integer",
+            "title": "Discount Percentage"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "times_used": {
+            "type": "integer",
+            "title": "Times Used"
+          },
+          "max_uses": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Uses"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "code",
+          "discount_percentage",
+          "is_active",
+          "times_used",
+          "created_at"
+        ],
+        "title": "PromoCouponResponse",
+        "description": "Public representation of a promotional coupon."
+      },
+      "PublishingSlot": {
+        "type": "string",
+        "enum": [
+          "SLOT_1_MIDDAY",
+          "SLOT_2_EVENING"
+        ],
+        "title": "PublishingSlot",
+        "description": "Daily two-videos-per-day publishing slots (Midday 12:30 & Evening 19:30)."
+      },
+      "RefreshTokenRequest": {
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "minLength": 10,
+            "title": "Refresh Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "refresh_token"
+        ],
+        "title": "RefreshTokenRequest",
+        "description": "Payload for rotating an existing refresh token."
+      },
+      "RegisterUserRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 5,
+            "title": "Email",
+            "examples": [
+              "creator@superapp.io"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 8,
+            "title": "Password"
+          },
+          "full_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 2,
+            "title": "Full Name",
+            "examples": [
+              "Ada Lovelace"
+            ]
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/UserRole"
+            },
+            "type": "array",
+            "title": "Roles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password",
+          "full_name"
+        ],
+        "title": "RegisterUserRequest",
+        "description": "Payload for registering a new user account."
+      },
+      "RestockProductRequest": {
+        "properties": {
+          "quantity_to_add": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Quantity To Add",
+            "description": "Number of positive units to add to product stock.",
+            "examples": [
+              5
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "quantity_to_add"
+        ],
+        "title": "RestockProductRequest",
+        "description": "Payload for adding inventory stock to an existing product."
+      },
+      "ScheduleMediaPostRequest": {
+        "properties": {
+          "platform": {
+            "type": "string",
+            "title": "Platform",
+            "default": "TIKTOK",
+            "examples": [
+              "TIKTOK",
+              "INSTAGRAM_REELS"
+            ]
+          },
+          "scheduled_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Scheduled Date",
+            "description": "Target publication date (YYYY-MM-DD)."
+          },
+          "slot": {
+            "$ref": "#/components/schemas/PublishingSlot"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slot"
+        ],
+        "title": "ScheduleMediaPostRequest",
+        "description": "Payload for scheduling a MediaJob into one of the daily publishing slots."
+      },
+      "ScheduledPostResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "job_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Job Id"
+          },
+          "creator_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Creator Id"
+          },
+          "platform": {
+            "type": "string",
+            "title": "Platform"
+          },
+          "scheduled_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Scheduled Date"
+          },
+          "slot": {
+            "$ref": "#/components/schemas/PublishingSlot"
+          },
+          "conversions_count": {
+            "type": "integer",
+            "title": "Conversions Count"
+          },
+          "revenue_attributed_cents": {
+            "type": "integer",
+            "title": "Revenue Attributed Cents"
+          },
+          "ics_download_url": {
+            "type": "string",
+            "title": "Ics Download Url"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "job_id",
+          "creator_id",
+          "platform",
+          "scheduled_date",
+          "slot",
+          "conversions_count",
+          "revenue_attributed_cents",
+          "ics_download_url",
+          "created_at"
+        ],
+        "title": "ScheduledPostResponse",
+        "description": "Public representation of a scheduled video post and its attributed sales."
+      },
+      "ShipOrderRequest": {
+        "properties": {
+          "carrier_name": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 2,
+            "title": "Carrier Name",
+            "examples": [
+              "InterRapidísimo"
+            ]
+          },
+          "tracking_code": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 3,
+            "title": "Tracking Code",
+            "examples": [
+              "GUIA-2400991188"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "carrier_name",
+          "tracking_code"
+        ],
+        "title": "ShipOrderRequest",
+        "description": "Payload for dispatching a confirmed order with carrier and tracking guide."
+      },
+      "TokenPairResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "refresh_token"
+        ],
+        "title": "TokenPairResponse",
+        "description": "JWT access and refresh token response."
+      },
+      "TransactionRequest": {
+        "properties": {
+          "amount_cents": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Amount Cents",
+            "description": "Amount in integer cents (strictly > 0).",
+            "examples": [
+              5000000
+            ]
+          },
+          "reference": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 2,
+            "title": "Reference",
+            "examples": [
+              "PSE Top-up #9812"
+            ]
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 4,
+            "title": "Idempotency Key",
+            "examples": [
+              "topup-user-123-req-001"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_cents",
+          "reference",
+          "idempotency_key"
+        ],
+        "title": "TransactionRequest",
+        "description": "Payload for depositing (CREDIT) or withdrawing (DEBIT) funds."
+      },
+      "TransactionResultResponse": {
+        "properties": {
+          "wallet": {
+            "$ref": "#/components/schemas/WalletSummaryResponse"
+          },
+          "entry": {
+            "$ref": "#/components/schemas/LedgerEntryResponse"
+          }
+        },
+        "type": "object",
+        "required": [
+          "wallet",
+          "entry"
+        ],
+        "title": "TransactionResultResponse",
+        "description": "Response returned after a successful deposit or withdrawal."
+      },
+      "TransactionStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "COMPLETED",
+          "FAILED"
+        ],
+        "title": "TransactionStatus",
+        "description": "Lifecycle status of a wallet transaction."
+      },
+      "TransactionType": {
+        "type": "string",
+        "enum": [
+          "CREDIT",
+          "DEBIT"
+        ],
+        "title": "TransactionType",
+        "description": "Types of financial ledger movements."
+      },
+      "UserResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/UserRole"
+            },
+            "type": "array",
+            "title": "Roles"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "full_name",
+          "roles",
+          "is_active",
+          "created_at"
+        ],
+        "title": "UserResponse",
+        "description": "Public profile representation returned by the Identity API."
+      },
+      "UserRole": {
+        "type": "string",
+        "enum": [
+          "USER",
+          "CREATOR",
+          "MERCHANT",
+          "ADMIN"
+        ],
+        "title": "UserRole",
+        "description": "Supported roles across the Super App 4-year horizon."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WalletMeResponse": {
+        "properties": {
+          "wallet": {
+            "$ref": "#/components/schemas/WalletSummaryResponse"
+          },
+          "recent_entries": {
+            "items": {
+              "$ref": "#/components/schemas/LedgerEntryResponse"
+            },
+            "type": "array",
+            "title": "Recent Entries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "wallet",
+          "recent_entries"
+        ],
+        "title": "WalletMeResponse",
+        "description": "Response for GET /api/v1/wallet/me including recent ledger movements."
+      },
+      "WalletSummaryResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "balance_cents": {
+            "type": "integer",
+            "title": "Balance Cents"
+          },
+          "loyalty_tier": {
+            "type": "string",
+            "title": "Loyalty Tier",
+            "default": "BRONZE"
+          },
+          "loyalty_points": {
+            "type": "integer",
+            "title": "Loyalty Points",
+            "default": 0
+          },
+          "lifetime_volume_cents": {
+            "type": "integer",
+            "title": "Lifetime Volume Cents",
+            "default": 0
+          },
+          "is_locked": {
+            "type": "boolean",
+            "title": "Is Locked"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "currency",
+          "balance_cents",
+          "is_locked",
+          "created_at"
+        ],
+        "title": "WalletSummaryResponse",
+        "description": "Public representation of a user's wallet state."
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

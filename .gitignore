@@ -1,0 +1,33 @@
+# Python / Virtual Environments
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Environment & Secrets (never commit real secrets)
+.env
+backend/.env
+*.env.local
+
+# Local SQLite databases & Media AI generated artifacts
+*.db
+*.sqlite
+*.sqlite3
+backend/media_outputs/
+media_outputs/
+
+# Android / Gradle / IDE
+client-mobile/.gradle/
+client-mobile/.idea/
+client-mobile/local.properties
+client-mobile/**/build/
+.vscode/
+.DS_Store
+Thumbs.db
