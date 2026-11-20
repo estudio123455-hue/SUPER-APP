@@ -129,6 +129,7 @@ def create_app() -> FastAPI:
     application.include_router(media_ai_router)
 
     @application.get("/", include_in_schema=False)
+    @application.get("/api/index", include_in_schema=False)
     async def root_redirect() -> RedirectResponse:
         """Redirects root URL directly to the interactive Control Center dashboard."""
         return RedirectResponse(
