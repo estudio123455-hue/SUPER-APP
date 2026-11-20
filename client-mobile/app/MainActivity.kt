@@ -7,9 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import co.superapp.core.eventbus.ClientAppEvent
 import co.superapp.core.eventbus.ClientEventBus
-import co.superapp.core.network.AuthTokenInterceptor
 import co.superapp.core.network.AuthTokenProvider
-import co.superapp.core.network.SuperAppApiService
+import co.superapp.core.network.SuperAppApiClient
 import co.superapp.features.feat_auth.application.LoginUserUseCase
 import co.superapp.features.feat_auth.infrastructure.RemoteAuthRepository
 import co.superapp.features.feat_auth.presentation.AuthViewModel
@@ -26,11 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 class MainActivity : ComponentActivity() {
 
@@ -54,17 +48,9 @@ class MainActivity : ComponentActivity() {
             override fun currentAccessToken(): String? = currentJwtToken
         }
 
-        val json = Json { ignoreUnknownKeys = true }
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(AuthTokenInterceptor(tokenProvider))
-            .build()
-
-        val apiService = Retrofit.Builder()
-            .baseUrl(SuperAppApiService.EMULATOR_BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .build()
-            .create(SuperAppApiService::class.java)
+        val apiService = SuperAppApiClient.create(
+            tokenProvider = tokenProvider,
+        )
 
         val ioDispatcher = Dispatchers.IO
 

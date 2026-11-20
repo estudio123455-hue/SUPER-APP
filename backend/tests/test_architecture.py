@@ -864,5 +864,168 @@ def test_vercel_serverless_entrypoint_and_config(monkeypatch: pytest.MonkeyPatch
     )
 
 
+def test_mobile_network_production_base_url_configured() -> None:
+    """Verifies Android client defaults to Vercel production URL with 30s timeouts and preserves Laws 1 & 3."""
+    expected_prod_url = "https://backend-tau-three-31.vercel.app/"
+    expected_local_url = "http://10.0.2.2:8000/"
+
+    api_service_path = MOBILE_DIR / "core" / "network" / "SuperAppApiService.kt"
+    api_client_path = MOBILE_DIR / "core" / "network" / "SuperAppApiClient.kt"
+    main_activity_path = MOBILE_DIR / "app" / "MainActivity.kt"
+
+    assert api_service_path.is_file(), "Falta SuperAppApiService.kt."
+    assert api_client_path.is_file(), "Falta SuperAppApiClient.kt."
+    assert main_activity_path.is_file(), "Falta MainActivity.kt."
+
+    service_src = api_service_path.read_text(encoding="utf-8-sig")
+    client_src = api_client_path.read_text(encoding="utf-8-sig")
+    activity_src = main_activity_path.read_text(encoding="utf-8-sig")
+
+    assert f'const val DEFAULT_PRODUCTION_BASE_URL: String = "{expected_prod_url}"' in service_src
+    assert f'const val LOCAL_EMULATOR_BASE_URL: String = "{expected_local_url}"' in service_src
+
+    assert "baseUrl: String = DEFAULT_PRODUCTION_BASE_URL" in client_src
+    assert "const val DEFAULT_TIMEOUT_SECONDS: Long = 30L" in client_src
+    assert ".connectTimeout(timeoutSeconds, TimeUnit.SECONDS)" in client_src
+    assert ".readTimeout(timeoutSeconds, TimeUnit.SECONDS)" in client_src
+    assert ".writeTimeout(timeoutSeconds, TimeUnit.SECONDS)" in client_src
+
+    assert "SuperAppApiClient.create(" in activity_src
+
+    # Verify Law 1 & Law 3: pure domain layers of all 4 mobile features have no network/Android imports
+    for feat in ("feat_auth", "feat_wallet", "feat_shop", "feat_studio"):
+        domain_dir = MOBILE_FEATURES_DIR / feat / "domain"
+        for kt_file in domain_dir.glob("*.kt"):
+            src = kt_file.read_text(encoding="utf-8-sig")
+            assert "co.superapp.core.network" not in src, (
+                f"Violación Ley 3 en {kt_file}: el dominio puro no puede importar core.network."
+            )
+            for forbidden in FORBIDDEN_KOTLIN_DOMAIN_IMPORTS:
+                assert f"import {forbidden}" not in src, (
+                    f"Violación Ley 3 en {kt_file}: import prohibido '{forbidden}'."
+                )
+
+
+@pytest.mark.asyncio
+async def test_vercel_cron_outbox_relay_endpoint_and_security(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Verifies protected Vercel Cron endpoint GET /api/v1/internal/outbox/relay, vercel.json crons, and OpenAPI isolation."""
+    from datetime import UTC, datetime
+    from uuid import uuid4
+    from httpx import ASGITransport, AsyncClient
+    from sqlalchemy import select
+    from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+    from sqlalchemy.pool import StaticPool
+
+    from app.core.config import get_settings
+    from app.core.database import (
+        Base,
+        SQLITE_SCHEMA_TRANSLATE_MAP,
+        reset_session_factory,
+        set_session_factory,
+    )
+    from app.core.outbox import OutboxEventModel
+    from app.main import app
+
+    # 1. Verify vercel.json (root & backend/) declare the cron job
+    for vj_path in (MONOREPO_ROOT / "vercel.json", BACKEND_DIR / "vercel.json"):
+        assert vj_path.is_file(), f"Falta {vj_path}."
+        cfg = json.loads(vj_path.read_text(encoding="utf-8"))
+        crons = cfg.get("crons", [])
+        assert any(
+            c.get("path") == "/api/v1/internal/outbox/relay" and c.get("schedule")
+            for c in crons
+        ), f"{vj_path} debe declarar el cron /api/v1/internal/outbox/relay."
+
+    # 2. Verify internal endpoint is excluded from public OpenAPI schema
+    assert "/api/v1/internal/outbox/relay" not in app.openapi().get("paths", {})
+
+    # 3. Prepare isolated SQLite DB with 1 PENDING and 1 FAILED Outbox event
+    test_engine = create_async_engine(
+        "sqlite+aiosqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+        execution_options={"schema_translate_map": SQLITE_SCHEMA_TRANSLATE_MAP},
+    )
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    factory = async_sessionmaker(
+        bind=test_engine,
+        class_=AsyncSession,
+        expire_on_commit=False,
+    )
+    set_session_factory(factory)
+
+    try:
+        async with factory() as session:
+            session.add_all(
+                [
+                    OutboxEventModel(
+                        id=uuid4(),
+                        event_id=uuid4(),
+                        event_name="CronPendingEvent",
+                        payload='{"source": "cron_test_1"}',
+                        status="PENDING",
+                        retry_count=0,
+                        created_at=datetime.now(UTC),
+                    ),
+                    OutboxEventModel(
+                        id=uuid4(),
+                        event_id=uuid4(),
+                        event_name="CronFailedEvent",
+                        payload='{"source": "cron_test_2"}',
+                        status="FAILED",
+                        retry_count=1,
+                        error_message="Transient error",
+                        created_at=datetime.now(UTC),
+                    ),
+                ]
+            )
+            await session.commit()
+
+        settings = get_settings()
+        original_cron_secret = settings.cron_secret
+        try:
+            # 4. When CRON_SECRET is unset -> 401
+            settings.cron_secret = None
+            transport = ASGITransport(app=app)
+            async with AsyncClient(transport=transport, base_url="http://testserver") as client:
+                res_unset = await client.get("/api/v1/internal/outbox/relay")
+                assert res_unset.status_code == 401
+
+                # 5. Configure CRON_SECRET; missing or invalid Bearer token -> 401
+                settings.cron_secret = "super-secret-vercel-cron-2026"
+                res_no_hdr = await client.get("/api/v1/internal/outbox/relay")
+                assert res_no_hdr.status_code == 401
+
+                res_wrong = await client.get(
+                    "/api/v1/internal/outbox/relay",
+                    headers={"Authorization": "Bearer wrong-token"},
+                )
+                assert res_wrong.status_code == 401
+
+                # 6. Valid Bearer token -> 200 OK & drains both PENDING and FAILED events
+                res_ok = await client.get(
+                    "/api/v1/internal/outbox/relay",
+                    headers={"Authorization": "Bearer super-secret-vercel-cron-2026"},
+                )
+                assert res_ok.status_code == 200
+                body = res_ok.json()
+                assert body["status"] == "ok"
+                assert body["relayed_count"] == 2
+
+            async with factory() as session:
+                rows = (await session.execute(select(OutboxEventModel))).scalars().all()
+                assert len(rows) == 2
+                assert all(r.status == "PUBLISHED" and r.published_at is not None for r in rows)
+        finally:
+            settings.cron_secret = original_cron_secret
+    finally:
+        reset_session_factory()
+        await test_engine.dispose()
+
+
 
 

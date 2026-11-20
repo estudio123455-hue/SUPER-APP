@@ -11,11 +11,12 @@ Production Deployment Guide:
 import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+import hmac
 import time
 from typing import Any
 from uuid import uuid4
 
-from fastapi import FastAPI, Request, Response, status
+from fastapi import FastAPI, HTTPException, Request, Response, status
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import RedirectResponse
 
@@ -30,7 +31,7 @@ from app.core.database import (
     get_session_factory,
 )
 from app.core.event_bus import event_bus
-from app.core.outbox import run_outbox_retry_loop
+from app.core.outbox import relay_pending_outbox_events, run_outbox_retry_loop
 
 from app.modules.commerce.presentation.router import router as commerce_router
 from app.modules.identity.presentation.router import router as identity_router
@@ -163,6 +164,34 @@ def create_app() -> FastAPI:
         except Exception as exc:
             response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
             return {"status": "unhealthy", "error": str(exc)}
+
+    @application.get("/api/v1/internal/outbox/relay", include_in_schema=False)
+    async def relay_outbox_cron(request: Request) -> dict[str, Any]:
+        """Protected Vercel Cron endpoint that relays PENDING/FAILED Outbox events."""
+        expected_secret = (get_settings().cron_secret or "").strip()
+        auth_header = request.headers.get("Authorization", "")
+        bearer_prefix = "Bearer "
+        provided_token = (
+            auth_header[len(bearer_prefix):].strip()
+            if auth_header.startswith(bearer_prefix)
+            else ""
+        )
+        if not expected_secret or not provided_token or not hmac.compare_digest(
+            provided_token, expected_secret
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized cron invocation.",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        factory = get_session_factory()
+        async with factory() as session:
+            relayed_count = await relay_pending_outbox_events(
+                event_bus=event_bus,
+                session=session,
+            )
+        return {"status": "ok", "relayed_count": relayed_count}
 
     return application
 

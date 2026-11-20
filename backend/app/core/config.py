@@ -98,6 +98,7 @@ class Settings(BaseSettings):
     # Transactional Outbox Background Worker (Operational Resilience)
     outbox_retry_worker_enabled: bool = Field(default=False)
     outbox_retry_interval_seconds: float = Field(default=15.0)
+    cron_secret: str | None = Field(default=None)
 
     # Media AI Physical Artifacts Directory
     media_outputs_dir: str | None = Field(default=None)

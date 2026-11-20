@@ -34,11 +34,14 @@ class AuthTokenInterceptor(
 
 /**
  * Retrofit contract synchronized with shared-contracts/openapi.json.
- * Default Android Emulator base URL: http://10.0.2.2:8000/
+ * Production URL (Vercel + Neon): https://backend-tau-three-31.vercel.app/
+ * Local Android Emulator URL: http://10.0.2.2:8000/
  */
 interface SuperAppApiService {
     companion object {
-        const val EMULATOR_BASE_URL: String = "http://10.0.2.2:8000/"
+        const val DEFAULT_PRODUCTION_BASE_URL: String = "https://backend-tau-three-31.vercel.app/"
+        const val LOCAL_EMULATOR_BASE_URL: String = "http://10.0.2.2:8000/"
+        const val EMULATOR_BASE_URL: String = LOCAL_EMULATOR_BASE_URL
     }
 
     // Identity Bounded Context
