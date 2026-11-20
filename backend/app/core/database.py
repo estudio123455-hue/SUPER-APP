@@ -131,15 +131,23 @@ async def ensure_sqlite_columns_up_to_date(target_engine: AsyncEngine | None = N
     engine_to_use = target_engine or engine
 
     def _sync_upgrade(conn: Any) -> None:
-        if conn.dialect.name != "sqlite":
-            return
-
         from app.modules.commerce.infrastructure.models import CommerceBase
         from app.modules.identity.infrastructure.models import IdentityBase
         from app.modules.media_ai.infrastructure.models import MediaAiBase
         from app.modules.wallet.infrastructure.models import WalletBase
 
         bases = (Base, IdentityBase, WalletBase, CommerceBase, MediaAiBase)
+
+        if conn.dialect.name == "postgresql":
+            for schema_name in MODULE_SCHEMAS.values():
+                conn.exec_driver_sql(f'CREATE SCHEMA IF NOT EXISTS "{schema_name}"')
+            for b in bases:
+                b.metadata.create_all(conn)
+            return
+
+        if conn.dialect.name != "sqlite":
+            return
+
         for b in bases:
             b.metadata.create_all(conn)
 

@@ -854,9 +854,14 @@ def test_vercel_serverless_entrypoint_and_config(monkeypatch: pytest.MonkeyPatch
     assert serverless_settings.outbox_retry_worker_enabled is False
 
     # 5. Serverless settings prefer external PostgreSQL DATABASE_URL when configured (e.g. Neon/Supabase)
-    monkeypatch.setenv("DATABASE_URL", "postgresql://user:pass@ep-demo.neon.tech/neondb")
+    monkeypatch.setenv(
+        "DATABASE_URL",
+        "postgresql://user:pass@ep-demo-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+    )
     neon_settings = Settings(_env_file=None)
-    assert neon_settings.async_database_url == "postgresql+asyncpg://user:pass@ep-demo.neon.tech/neondb"
+    assert neon_settings.async_database_url == (
+        "postgresql+asyncpg://user:pass@ep-demo-pooler.us-east-2.aws.neon.tech/neondb?ssl=require"
+    )
 
 
 

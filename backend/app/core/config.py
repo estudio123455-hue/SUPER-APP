@@ -3,8 +3,54 @@
 from functools import lru_cache
 import os
 from pathlib import Path
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def normalize_async_database_url(raw_url: str) -> str:
+    """Normalizes PostgreSQL URLs (e.g. Neon/Supabase) for SQLAlchemy + asyncpg compatibility."""
+    cleaned = raw_url.strip()
+    if cleaned.startswith("postgres://"):
+        cleaned = cleaned.replace("postgres://", "postgresql+asyncpg://", 1)
+    elif cleaned.startswith("postgresql://"):
+        cleaned = cleaned.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+    if not cleaned.startswith("postgresql+asyncpg://"):
+        return cleaned
+
+    parts = urlsplit(cleaned)
+    if not parts.query:
+        return cleaned
+
+    query_pairs = parse_qsl(parts.query, keep_blank_values=True)
+    normalized_pairs: list[tuple[str, str]] = []
+    has_ssl = any(k.lower() == "ssl" for k, _ in query_pairs)
+    needs_ssl_require = False
+
+    for key, value in query_pairs:
+        lower_key = key.lower()
+        if lower_key == "channel_binding":
+            # asyncpg does not accept channel_binding as a connect() kwarg
+            continue
+        if lower_key == "sslmode":
+            if value.lower() not in ("disable", "allow", "prefer"):
+                needs_ssl_require = True
+            continue
+        normalized_pairs.append((key, value))
+
+    if needs_ssl_require and not has_ssl:
+        normalized_pairs.append(("ssl", "require"))
+
+    return urlunsplit(
+        (
+            parts.scheme,
+            parts.netloc,
+            parts.path,
+            urlencode(normalized_pairs),
+            parts.fragment,
+        )
+    )
 
 
 class Settings(BaseSettings):
@@ -79,14 +125,9 @@ class Settings(BaseSettings):
     def async_database_url(self) -> str:
         """Builds the SQLAlchemy 2.0 async connection URI (local SQLite, Vercel /tmp SQLite, or PostgreSQL)."""
         if self.database_url_override and self.database_url_override.strip():
-            return self.database_url_override.strip()
+            return normalize_async_database_url(self.database_url_override)
         if self.database_url and self.database_url.strip():
-            raw_url = self.database_url.strip()
-            if raw_url.startswith("postgres://"):
-                return raw_url.replace("postgres://", "postgresql+asyncpg://", 1)
-            if raw_url.startswith("postgresql://"):
-                return raw_url.replace("postgresql://", "postgresql+asyncpg://", 1)
-            return raw_url
+            return normalize_async_database_url(self.database_url)
         if self.use_postgres:
             return (
                 f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}"
